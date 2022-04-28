@@ -20,17 +20,17 @@ public class GetOrdersWithoutCourierIdTest {
 
     @Test
     public void getAvailableOrdersWithoutCourierId() {
+        int limit = 10;
         Response response = given().log().all()
                 .header("Content-type", "application/json")
                 .when()
-                .get("/api/v1/orders?limit=10&page=0");
+                .get("/api/v1/orders?limit={limit}&page=0", limit);
         response.then().assertThat().body("orders.id", notNullValue())
                 .and()
                 .statusCode(200);
 
         ArrayList<String> orders = response.then().extract().body().path("orders");
-        boolean actual = !orders.isEmpty();
+        boolean actual = !orders.isEmpty() & orders.size() == limit;
         assertTrue(actual);
-
     }
 }
