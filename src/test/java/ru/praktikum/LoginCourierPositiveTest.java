@@ -13,20 +13,11 @@ import static org.hamcrest.Matchers.*;
 public class LoginCourierPositiveTest {
 
     Courier courier = new Courier("densky", "password", "lalka");
-    LoginId loginId;
-    Integer id;
 
     @Before
     public void setUp() {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-
-        given()
-                .header("Content-type", "application/json")
-                .body(courier)
-                .when()
-                .post("/api/v1/courier").then().assertThat().body("ok", equalTo(true))
-                .and()
-                .statusCode(201);
+        CourierClient.create(courier);
     }
 
     @Test
@@ -40,20 +31,10 @@ public class LoginCourierPositiveTest {
         response.then().assertThat().body("id", notNullValue())
                         .and()
                         .statusCode(200);
-        loginId = response.body().as(LoginId.class);
-        id = response.then().extract().body().path("id");
     }
-
 
     @After
     public void tearDown() {
-        given()
-                .header("Content-type", "application/json")
-                .body(loginId)
-                .when()
-                .delete("/api/v1/courier/{id}", id)
-                .then().assertThat().body("ok", equalTo(true))
-                .and()
-                .statusCode(200);
+        CourierClient.delete(CourierClient.login(courier));
     }
 }
