@@ -1,9 +1,7 @@
 package ru.praktikum;
 
-import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -11,36 +9,27 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class LoginCourierNegativeTest {
 
-    Courier courier = new Courier("densky", "password", "lalka");
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-        CourierClient.create(courier);
-    }
-
-    @Test
-    public void loginCourierWithoutLogin() {
-        given()
-                .header("Content-type", "application/json")
-                .body("{\"password\":\"password\"}")
-                .when()
-                .post("/api/v1/courier/login")
-                .then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
-                .and()
-                .statusCode(400);
-    }
+//    @Test
+//    public void loginCourierWithoutLogin() {
+//        Courier courier = new Courier("densky","password");
+//        CourierClient.createCourier(courier);
+//        Courier courierWithoutLogin = new Courier("password");
+//        ValidatableResponse rs = CourierClient.loginCourier(courierWithoutLogin);
+//        rs.assertThat().body("message", equalTo("Недостаточно данных для входа"))
+//                .and()
+//                .statusCode(400);
+//        CourierClient.deleteCourier(courier);
+//    }
 
     @Test
     public void loginCourierWithoutPassword() {
-        given()
-                .header("Content-type", "application/json")
-                .body("{\"login\":\"densky\"}")
-                .when()
-                .post("/api/v1/courier/login")
-                .then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
+        Courier courier = new Courier("densky","password");
+        CourierClient.createCourier(courier);
+        ValidatableResponse rs = CourierClient.loginCourier(new Courier().setPassword("password"));
+        rs.assertThat().body("message", equalTo("Недостаточно данных для входа"))
                 .and()
                 .statusCode(400);
+        CourierClient.deleteCourier(courier);
     }
 
     @Test
@@ -50,6 +39,7 @@ public class LoginCourierNegativeTest {
         Courier courierRandom = new Courier(login, password);
 
         given()
+                .baseUri(CourierClient.getBaseURI())
                 .header("Content-type", "application/json")
                 .body(courierRandom)
                 .when()
@@ -59,8 +49,4 @@ public class LoginCourierNegativeTest {
                 .statusCode(404);
     }
 
-    @After
-    public void tearDown() {
-        CourierClient.delete(CourierClient.login(courier));
-    }
 }

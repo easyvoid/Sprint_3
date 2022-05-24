@@ -16,30 +16,34 @@ public class Courier {
         this.password = password;
     }
 
-    public Courier(){
+    public Courier() {
     }
 
     public String getLogin() {
         return login;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public Courier setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public Courier setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
+
+    public Courier setLogin(String login) {
+        this.login = login;
+        return this;
+    }
+
 }
