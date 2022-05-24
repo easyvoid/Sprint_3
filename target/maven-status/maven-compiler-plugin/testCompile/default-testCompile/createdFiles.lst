@@ -2,6 +2,7 @@ ru\praktikum\GetOrdersWithoutCourierIdTest.class
 ru\praktikum\CreateNewCourierWithoutMainArgTest.class
 ru\praktikum\LoginCourierNegativeTest.class
 ru\praktikum\GetCourierOrdersPositiveTest.class
+ru\praktikum\Mesto1Test.class
 ru\praktikum\GetCourierOrdersNegativeTest.class
 ru\praktikum\CreateNewCourierPositiveAndSameLoginTest.class
 ru\praktikum\OrderParamTest.class
