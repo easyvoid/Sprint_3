@@ -13,22 +13,22 @@ public class CreateNewCourierPositiveAndSameLoginTest {
 
     @Test
     public void createNewCourierPositive() {
-        ValidatableResponse response = CourierClient.create(courier);
+        ValidatableResponse response = CourierClient.createCourier(courier);
         response.assertThat().body("ok", equalTo(true)).and().statusCode(201);
     }
 
     @Test
     public void createNewCourierWithSameLogin() {
         //запрос на создание курьера
-        CourierClient.create(courier);
+        CourierClient.createCourier(courier);
 
         //запрос на создание курьера с тем же логином
-        ValidatableResponse responseWithSameLogin = CourierClient.create(courier);
+        ValidatableResponse responseWithSameLogin = CourierClient.createCourier(courier);
         responseWithSameLogin.assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой.")).and().statusCode(409);
     }
 
     @After
     public void tearDown() {
-        CourierClient.delete(CourierClient.login(courier));
+        CourierClient.deleteCourier(courier);
     }
 }

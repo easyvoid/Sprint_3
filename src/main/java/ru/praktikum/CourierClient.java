@@ -10,8 +10,10 @@ import static io.restassured.RestAssured.given;
 
 public class CourierClient {
 
-    private static final RequestSpecification baseSpec = new RequestSpecBuilder()
-            .setBaseUri("http://qa-scooter.praktikum-services.ru/")
+    private static final String baseURI = "http://qa-scooter.praktikum-services.ru/";
+
+    private static RequestSpecification baseSpec = new RequestSpecBuilder()
+            .setBaseUri(baseURI)
             .setContentType("application/json")
             .log(LogDetail.ALL)
             .build();
@@ -20,9 +22,12 @@ public class CourierClient {
         return baseSpec;
     }
 
+    public static String getBaseURI() {
+        return baseURI;
+    }
 
     @Step("Запрос на создание курьера: {courier}")
-    public static ValidatableResponse create(Courier courier) {
+    public static ValidatableResponse createCourier(Courier courier) {
         return given()
                 .spec(getBaseSpec())
                 .body(courier)
@@ -32,19 +37,18 @@ public class CourierClient {
     }
 
     @Step("Запрос на логин курьера: {courier}, который возвращает его id")
-    public static Integer login(Courier courier) {
-        ValidatableResponse response = given()
+    public static ValidatableResponse loginCourier(Courier courier) {
+        return given()
                 .spec(getBaseSpec())
                 .body(courier)
                 .when()
                 .post("/api/v1/courier/login")
                 .then().log().all();
-
-        return response.and().extract().body().path("id");
     }
 
     @Step("Запрос на удаление курьера с id: {id}")
-    public static void delete(Integer id) {
+    public static void deleteCourier(Courier courier) {
+        Integer id = loginCourier(courier).and().extract().body().path("id");
         given()
                 .spec(getBaseSpec())
                 .when()

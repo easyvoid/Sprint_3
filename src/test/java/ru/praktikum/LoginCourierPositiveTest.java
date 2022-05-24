@@ -17,7 +17,7 @@ public class LoginCourierPositiveTest {
     @Before
     public void setUp() {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-        CourierClient.create(courier);
+        CourierClient.createCourier(courier);
     }
 
     @Test
@@ -35,6 +35,6 @@ public class LoginCourierPositiveTest {
 
     @After
     public void tearDown() {
-        CourierClient.delete(CourierClient.login(courier));
+        CourierClient.deleteCourier(courier);
     }
 }

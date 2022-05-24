@@ -1,5 +1,6 @@
 package ru.praktikum;
 
+import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -11,8 +12,9 @@ public class GetCourierOrdersPositiveTest {
 
     @Test
     public void getCourierOrdersListTest() {
-        CourierClient.create(courier);
-        Integer id = CourierClient.login(courier);
+        CourierClient.createCourier(courier);
+        ValidatableResponse rs = CourierClient.loginCourier(courier);
+        Integer id = rs.extract().body().path("id");
 
         given()
                 .baseUri("http://qa-scooter.praktikum-services.ru/")
@@ -21,6 +23,6 @@ public class GetCourierOrdersPositiveTest {
                 .then().assertThat().body("orders", empty()).and().statusCode(200)
                 .and().log().all();
 
-        CourierClient.delete(id);
+        CourierClient.deleteCourier(courier);
     }
 }
